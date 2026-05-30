@@ -1,0 +1,55 @@
+// Promo carousel cards — images from Unsplash (https://unsplash.com)
+// URLs verified to return HTTP 200
+
+export const promoCards = [
+  {
+    id: 'pr1',
+    title: 'Free Health Camp',
+    subtitle: 'Eye check-up & medicines — Govt. school ground, Saturday 9 AM',
+    cta: 'View schemes',
+    route: 'Schemes',
+    image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=900&h=400&fit=crop&auto=format&q=80',
+    fallbackIcon: 'medkit',
+    credit: 'Unsplash',
+  },
+  {
+    id: 'pr2',
+    title: 'PM-KISAN & Rural Schemes',
+    subtitle: 'Check eligibility and register for government benefits',
+    cta: 'Explore',
+    route: 'Schemes',
+    image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=900&h=400&fit=crop&auto=format&q=80',
+    fallbackIcon: 'ribbon',
+    credit: 'Siddharth Shah / Unsplash',
+  },
+  {
+    id: 'pr3',
+    title: 'Sell at Local Mandi',
+    subtitle: 'See today’s crop prices and list produce in the village market',
+    cta: 'Mandi prices',
+    route: 'MandiPrices',
+    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=900&h=400&fit=crop&auto=format&q=80',
+    fallbackIcon: 'leaf',
+    credit: 'Zoe Schaeffer / Unsplash',
+  },
+  {
+    id: 'pr4',
+    title: 'Gram Sabha This Sunday',
+    subtitle: 'Your voice matters — water, roads & village development',
+    cta: 'Calendar',
+    route: 'PanchayatCalendar',
+    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900&h=400&fit=crop&auto=format&q=80',
+    fallbackIcon: 'people',
+    credit: 'Bradley Andrews / Unsplash',
+  },
+  {
+    id: 'pr5',
+    title: 'Community Help Board',
+    subtitle: 'Offer labour, borrow a tractor, or find transport nearby',
+    cta: 'Open board',
+    route: 'HelpBoard',
+    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=900&h=400&fit=crop&auto=format&q=80',
+    fallbackIcon: 'hand-left',
+    credit: 'Bradley Andrews / Unsplash',
+  },
+];

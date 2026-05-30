@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "VillageConnect",
+    "slug": "villageconnect",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#1B5E3F"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.villageconnect.app"
+    },
+    "android": {
+      "package": "com.villageconnect.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#1B5E3F"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow VillageConnect to attach photos to grievances."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow VillageConnect to attach your location to grievances and emergency alerts."
+        }
+      ],
+      "expo-localization",
+      "expo-font"
+    ]
+  }
+}
