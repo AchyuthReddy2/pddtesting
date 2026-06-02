@@ -7,6 +7,7 @@ const { generateOtp, saveOtp, verifyOtp } = require('../utils/otpStore');
 
 const router = express.Router();
 const STATIC_OTP = process.env.STATIC_OTP || '';
+const allowStaticOtp = process.env.NODE_ENV !== 'production' && !!STATIC_OTP;
 
 function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase();
@@ -20,7 +21,7 @@ router.post('/send-otp', async (req, res) => {
   const otp = generateOtp();
   saveOtp(email, otp);
 
-  if (STATIC_OTP) {
+  if (allowStaticOtp) {
     // Optional fallback in environments where SMTP is not configured yet.
     saveOtp(email, STATIC_OTP);
     return res.json({ ok: true, message: `OTP sent (dev OTP: ${STATIC_OTP})` });
