@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { StackScreenHeader } from '../components/ScreenLayout';
 import { colors, spacing, radius, font } from '../theme/theme';
+import { safeGoBack } from '../utils/navigation';
 export default function ThreadScreen({ navigation, route }) {
   const { t, user, forumPosts, forumThreads, addForumReply, markThreadRead, fetchThreadPosts } = useApp();
   const threadId = route.params?.threadId;
@@ -24,7 +25,7 @@ export default function ThreadScreen({ navigation, route }) {
   if (!thread) {
     return (
       <SafeAreaView style={s.safe} edges={['top']}>
-        <StackScreenHeader title="Discussion" subtitle="Loading…" onBack={() => navigation.goBack()} />
+        <StackScreenHeader title="Discussion" subtitle="Loading…" onBack={() => safeGoBack(navigation)} />
         <View style={s.emptyWrap}>
           <Text style={s.empty}>Loading thread…</Text>
         </View>
@@ -49,7 +50,7 @@ export default function ThreadScreen({ navigation, route }) {
       <StackScreenHeader
         title={thread.title}
         subtitle={`${posts.length} replies`}
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
       />
 
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>

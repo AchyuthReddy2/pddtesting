@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { StackScreenHeader, OfflineBanner, layout } from '../components/ScreenLayout';
 import { colors, spacing, radius, font } from '../theme/theme';
+import { safeGoBack } from '../utils/navigation';
 export default function PanchayatCalendarScreen({ navigation }) {
   const { t, offline, getPanchayatCalendar } = useApp();
   const events = getPanchayatCalendar();
@@ -14,7 +15,7 @@ export default function PanchayatCalendarScreen({ navigation }) {
       <StackScreenHeader
         title={t('calendar')}
         subtitle={`${events.length} upcoming events`}
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
       />
       {offline ? <OfflineBanner text={t('offlineBanner')} /> : null}
 

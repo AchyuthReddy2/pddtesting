@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { StackScreenHeader, layout } from '../components/ScreenLayout';
 import { colors, spacing, radius, font } from '../theme/theme';
+import { safeGoBack } from '../utils/navigation';
 export default function GroupDetailScreen({ navigation, route }) {
   const { t, joinedGroups, forumPosts, readThreads, getGroups, getForumThreadsForGroup, fetchGroupThreads } = useApp();
   const groupId = route.params?.groupId;
@@ -43,7 +44,7 @@ export default function GroupDetailScreen({ navigation, route }) {
       <StackScreenHeader
         title={group.name}
         subtitle={group.topic}
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
         accent={group.color}
       />
 

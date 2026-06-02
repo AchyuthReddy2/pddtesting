@@ -88,11 +88,11 @@ export default function LoginScreen({ navigation }) {
                 <View style={s.inputRow}>
                   <Ionicons name="keypad" size={20} color={colors.textMuted} />
                   <TextInput
-                    style={[s.input, { letterSpacing: 8, marginLeft: spacing.sm }]}
-                    placeholder="1234"
+                    style={[s.input, { letterSpacing: 6, marginLeft: spacing.sm }]}
+                    placeholder="123456"
                     placeholderTextColor={colors.textMuted}
                     keyboardType="number-pad"
-                    maxLength={4}
+                    maxLength={6}
                     value={otp}
                     onChangeText={setOtp}
                   />

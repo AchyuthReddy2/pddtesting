@@ -6,6 +6,7 @@ import { useApp } from '../context/AppContext';
 import { StackScreenHeader, layout } from '../components/ScreenLayout';
 import { EmptyState } from '../components/UI';
 import { colors, spacing, radius, font } from '../theme/theme';
+import { safeGoBack } from '../utils/navigation';
 
 export default function NotificationsScreen({ navigation }) {
   const { t, notifications, markAllRead } = useApp();
@@ -16,7 +17,7 @@ export default function NotificationsScreen({ navigation }) {
       <StackScreenHeader
         title={t('notifications')}
         subtitle={unread ? `${unread} unread` : 'All caught up'}
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
         rightIcon="checkmark-done"
         onRightPress={markAllRead}
         accent={colors.accent}

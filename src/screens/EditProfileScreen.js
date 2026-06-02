@@ -6,6 +6,7 @@ import { useApp } from '../context/AppContext';
 import { StackScreenHeader } from '../components/ScreenLayout';
 import { PrimaryButton } from '../components/UI';
 import { colors, spacing, radius, font } from '../theme/theme';
+import { safeGoBack } from '../utils/navigation';
 
 const roles = ['Resident', 'Sarpanch'];
 
@@ -22,7 +23,7 @@ export default function EditProfileScreen({ navigation }) {
       return;
     }
     updateUser({ name: name.trim(), village: village.trim(), phone, role });
-    navigation.goBack();
+    safeGoBack(navigation);
   };
 
   return (
@@ -31,7 +32,7 @@ export default function EditProfileScreen({ navigation }) {
         <StackScreenHeader
           title={t('editProfile')}
           subtitle={user?.village || ''}
-          onBack={() => navigation.goBack()}
+          onBack={() => safeGoBack(navigation)}
         />
 
         <ScrollView contentContainerStyle={s.body} keyboardShouldPersistTaps="handled">

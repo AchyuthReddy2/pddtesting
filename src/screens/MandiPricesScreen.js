@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { StackScreenHeader, OfflineBanner, layout } from '../components/ScreenLayout';
 import { colors, spacing, radius, font } from '../theme/theme';
+import { safeGoBack } from '../utils/navigation';
 export default function MandiPricesScreen({ navigation }) {
   const { t, offline, getMandiPrices } = useApp();
   const prices = getMandiPrices();
@@ -14,7 +15,7 @@ export default function MandiPricesScreen({ navigation }) {
       <StackScreenHeader
         title={t('mandiPrices')}
         subtitle={`${prices.length} crops · Updated today`}
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
         accent={colors.gold}
       />
       {offline ? <OfflineBanner text={t('offlineBanner')} /> : null}

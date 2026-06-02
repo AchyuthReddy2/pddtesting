@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { StackScreenHeader, FilterChips, layout } from '../components/ScreenLayout';
 import { colors, spacing, radius, font } from '../theme/theme';
+import { safeGoBack } from '../utils/navigation';
 const filters = ['All', 'Scheme', 'Health Camp'];
 
 export default function SchemesScreen({ navigation }) {
@@ -28,7 +29,7 @@ export default function SchemesScreen({ navigation }) {
       <StackScreenHeader
         title={t('schemes')}
         subtitle={`${list.length} programs`}
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
         accent={colors.gold}
       />
 

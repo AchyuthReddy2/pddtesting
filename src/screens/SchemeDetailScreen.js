@@ -7,6 +7,7 @@ import { StackScreenHeader, layout } from '../components/ScreenLayout';
 import { PrimaryButton } from '../components/UI';
 import { colors, spacing, radius, font } from '../theme/theme';
 import { shareWhatsApp } from '../utils/share';
+import { safeGoBack } from '../utils/navigation';
 
 export default function SchemeDetailScreen({ navigation, route }) {
   const { t, schemeRSVPs, toggleSchemeRSVP, getSchemes } = useApp();
@@ -45,7 +46,7 @@ export default function SchemeDetailScreen({ navigation, route }) {
       <StackScreenHeader
         title={t('details')}
         subtitle={scheme.type}
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
         rightIcon="logo-whatsapp"
         onRightPress={share}
         accent={color}

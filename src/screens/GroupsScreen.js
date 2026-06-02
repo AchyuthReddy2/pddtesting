@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { StackScreenHeader, layout } from '../components/ScreenLayout';
 import { colors, spacing, radius, font } from '../theme/theme';
+import { safeGoBack } from '../utils/navigation';
 export default function GroupsScreen({ navigation }) {
   const { t, joinedGroups, toggleGroup, getGroups } = useApp();
   const groups = getGroups();
@@ -15,7 +16,7 @@ export default function GroupsScreen({ navigation }) {
       <StackScreenHeader
         title={t('groups')}
         subtitle={`${joinedCount} joined · ${groups.length} available`}
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
       />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>

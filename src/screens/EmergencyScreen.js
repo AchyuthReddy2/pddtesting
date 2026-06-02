@@ -9,6 +9,7 @@ import { PrimaryButton } from '../components/UI';
 import { colors, spacing, radius, font, shadow } from '../theme/theme';
 import { callNumber } from '../utils/call';
 import { shareLocationSMS } from '../utils/share';
+import { safeGoBack } from '../utils/navigation';
 
 export default function EmergencyScreen({ navigation }) {
   const { t, personalEmergencyContacts, addEmergencyContact, removeEmergencyContact, getEmergencyContacts } = useApp();
@@ -48,7 +49,7 @@ export default function EmergencyScreen({ navigation }) {
       <StackScreenHeader
         title={t('emergency')}
         subtitle="Tap to call · Share location"
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
         accent={colors.danger}
       />
 

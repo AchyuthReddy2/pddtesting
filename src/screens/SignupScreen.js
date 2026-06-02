@@ -7,6 +7,7 @@ import { api } from '../api/client';
 import { PrimaryButton } from '../components/UI';
 import { colors, spacing, radius, font } from '../theme/theme';
 import { languageNames } from '../data/translations';
+import { safeGoBack } from '../utils/navigation';
 
 export default function SignupScreen({ navigation, route }) {
   const { t, setSession, lang, setLang } = useApp();
@@ -53,7 +54,7 @@ export default function SignupScreen({ navigation, route }) {
     <SafeAreaView style={s.safe} edges={['top']}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <View style={s.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => safeGoBack(navigation)}>
             <Ionicons name="arrow-back" size={26} color={colors.white} />
           </TouchableOpacity>
           <Text style={s.headerTitle}>{t('signup')}</Text>

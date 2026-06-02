@@ -12,6 +12,7 @@ import {
 import { PrimaryButton } from '../components/UI';
 import { colors, spacing, radius, font } from '../theme/theme';
 import { callNumber } from '../utils/call';
+import { safeGoBack } from '../utils/navigation';
 
 export default function HelpBoardScreen({ navigation }) {
   const { t, user, getHelpBoard, addHelpBoardPost } = useApp();
@@ -43,7 +44,7 @@ export default function HelpBoardScreen({ navigation }) {
       <StackScreenHeader
         title={t('helpBoard')}
         subtitle={`${posts.length} posts`}
-        onBack={() => navigation.goBack()}
+        onBack={() => safeGoBack(navigation)}
         accent={colors.sky}
       />
 
