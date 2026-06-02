@@ -7,6 +7,7 @@ const emergencyContactSchema = new mongoose.Schema(
 
 const userSchema = new mongoose.Schema(
   {
+    email: { type: String, unique: true, sparse: true, index: true, lowercase: true, trim: true },
     phone: { type: String, required: true, unique: true, index: true },
     name: { type: String, default: 'Villager' },
     village: { type: String, default: 'Rampur' },

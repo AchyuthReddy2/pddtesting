@@ -11,3 +11,4 @@ npm-debug.*
 *.key
 *.mobileprovision
 .DS_Store
+*.apk

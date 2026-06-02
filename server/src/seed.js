@@ -179,6 +179,7 @@ async function seed() {
   ]);
 
   const demoUser = await User.create({
+    email: 'resident@villageconnect.app',
     phone: '9876543210',
     name: 'Suresh Kumar',
     village: 'Rampur',
@@ -191,6 +192,7 @@ async function seed() {
   });
 
   const sarpanch = await User.create({
+    email: 'sarpanch@villageconnect.app',
     phone: '9876599887',
     name: 'Ram Singh',
     village: 'Rampur',
@@ -227,8 +229,8 @@ async function seed() {
   ]);
 
   console.log('Seed complete.');
-  console.log('Demo login: phone 9876543210 | OTP 1234');
-  console.log('Sarpanch login: phone 9876599887 | OTP 1234');
+  console.log('Demo login: resident@villageconnect.app | check email OTP');
+  console.log('Sarpanch login: sarpanch@villageconnect.app | check email OTP');
   await mongoose.disconnect();
 }
 

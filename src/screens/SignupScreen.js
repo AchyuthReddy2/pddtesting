@@ -10,29 +10,35 @@ import { languageNames } from '../data/translations';
 
 export default function SignupScreen({ navigation, route }) {
   const { t, setSession, lang, setLang } = useApp();
-  const presetPhone = route?.params?.phone || '';
+  const presetEmail = route?.params?.email || '';
   const signupToken = route?.params?.signupToken;
   const [name, setName] = useState('');
   const [village, setVillage] = useState('');
-  const [phone, setPhone] = useState(presetPhone);
+  const [email] = useState(presetEmail);
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
 
   const finish = async () => {
     if (!name.trim()) { Alert.alert(t('fullName'), 'Please enter your name.'); return; }
     if (!village.trim()) { Alert.alert(t('villageName'), 'Please enter your village name.'); return; }
+    if (!email) {
+      Alert.alert('OTP required', 'Verify your email on the login screen first.');
+      navigation.replace('Login');
+      return;
+    }
     if (phone.replace(/\D/g, '').length < 10) {
-      Alert.alert(t('phoneNumber'), 'Complete OTP login first with a valid phone number.');
+      Alert.alert(t('phoneNumber'), 'Please enter your 10-digit phone number.');
       return;
     }
     if (!signupToken) {
-      Alert.alert('OTP required', 'Verify your phone on the login screen first.');
+      Alert.alert('OTP required', 'Verify your email on the login screen first.');
       navigation.replace('Login');
       return;
     }
     setLoading(true);
     try {
       const res = await api.signup(
-        { name: name.trim(), village: village.trim(), lang },
+        { name: name.trim(), village: village.trim(), lang, phone },
         signupToken
       );
       await setSession(res.token, res.user);
@@ -75,6 +81,18 @@ export default function SignupScreen({ navigation, route }) {
           <View style={s.field}>
             <Ionicons name="call-outline" size={20} color={colors.textMuted} />
             <TextInput style={s.input} placeholder="98765 43210" placeholderTextColor={colors.textMuted} keyboardType="phone-pad" maxLength={10} value={phone} onChangeText={setPhone} />
+          </View>
+
+          <Text style={s.label}>Email (verified)</Text>
+          <View style={s.field}>
+            <Ionicons name="mail-outline" size={20} color={colors.textMuted} />
+            <TextInput
+              style={s.input}
+              value={email}
+              editable={false}
+              selectTextOnFocus={false}
+              placeholderTextColor={colors.textMuted}
+            />
           </View>
 
           <Text style={s.label}>{t('language')}</Text>

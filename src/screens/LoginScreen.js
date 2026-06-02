@@ -9,21 +9,22 @@ import { colors, spacing, radius, font } from '../theme/theme';
 
 export default function LoginScreen({ navigation }) {
   const { t, setSession } = useApp();
-  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [stage, setStage] = useState('phone');
   const [loading, setLoading] = useState(false);
 
   const sendOtp = async () => {
-    if (phone.replace(/\D/g, '').length < 10) {
-      Alert.alert(t('phoneNumber'), 'Please enter a valid 10-digit phone number.');
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail || !normalizedEmail.includes('@')) {
+      Alert.alert('Email', 'Please enter a valid email address.');
       return;
     }
     setLoading(true);
     try {
-      await api.sendOtp(phone);
+      await api.sendOtp(normalizedEmail);
       setStage('otp');
-      Alert.alert(t('sendOtp'), 'OTP sent. Use 1234 for demo login.');
+      Alert.alert(t('sendOtp'), 'OTP sent to your email.');
     } catch (e) {
       Alert.alert('Error', e.message || 'Could not reach server. Is the API running?');
     } finally {
@@ -32,11 +33,12 @@ export default function LoginScreen({ navigation }) {
   };
 
   const verify = async () => {
+    const normalizedEmail = email.trim().toLowerCase();
     setLoading(true);
     try {
-      const res = await api.verifyOtp(phone, otp);
+      const res = await api.verifyOtp(normalizedEmail, otp);
       if (res.needsSignup) {
-        navigation.replace('Signup', { phone, signupToken: res.token });
+        navigation.replace('Signup', { email: normalizedEmail, signupToken: res.token });
       } else {
         await setSession(res.token, res.user);
       }
@@ -63,17 +65,18 @@ export default function LoginScreen({ navigation }) {
           <View style={s.card}>
             {stage === 'phone' ? (
               <>
-                <Text style={s.label}>{t('phoneNumber')}</Text>
+                <Text style={s.label}>Email</Text>
                 <View style={s.inputRow}>
-                  <Text style={s.code}>+91</Text>
+                  <Ionicons name="mail-outline" size={20} color={colors.textMuted} />
                   <TextInput
                     style={s.input}
-                    placeholder="98765 43210"
+                    placeholder="you@example.com"
                     placeholderTextColor={colors.textMuted}
-                    keyboardType="phone-pad"
-                    maxLength={10}
-                    value={phone}
-                    onChangeText={setPhone}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    value={email}
+                    onChangeText={setEmail}
                   />
                 </View>
                 <PrimaryButton label={t('sendOtp')} icon="send" onPress={sendOtp} style={{ marginTop: spacing.lg }} />
@@ -81,7 +84,7 @@ export default function LoginScreen({ navigation }) {
             ) : (
               <>
                 <Text style={s.label}>{t('enterOtp')}</Text>
-                <Text style={s.otpHint}>Sent to +91 {phone}</Text>
+                <Text style={s.otpHint}>Sent to {email}</Text>
                 <View style={s.inputRow}>
                   <Ionicons name="keypad" size={20} color={colors.textMuted} />
                   <TextInput
@@ -95,8 +98,8 @@ export default function LoginScreen({ navigation }) {
                   />
                 </View>
                 <PrimaryButton label={t('verify')} icon="checkmark" onPress={verify} style={{ marginTop: spacing.lg }} />
-                <TouchableOpacity onPress={() => setStage('phone')} style={s.changeBtn}>
-                  <Text style={s.changeText}>Change number</Text>
+                <TouchableOpacity onPress={() => setStage('phone')} style={s.changeBtn} disabled={loading}>
+                  <Text style={s.changeText}>Change email</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -104,7 +107,7 @@ export default function LoginScreen({ navigation }) {
 
           <View style={s.footerRow}>
             <Text style={s.footerText}>{t('noAccount')} </Text>
-            <TouchableOpacity onPress={() => navigation.replace('Signup', { phone: '' })}>
+            <TouchableOpacity onPress={() => navigation.replace('Signup', { email: '' })}>
               <Text style={s.footerLink}>{t('signup')}</Text>
             </TouchableOpacity>
           </View>

@@ -1,17 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
+import { API_BASE_URL } from '../config/api';
 
 const TOKEN_KEY = '@villageconnect_token';
-const REQUEST_TIMEOUT_MS = 12000;
+/** Render free tier may cold-start; allow extra time on first request */
+const REQUEST_TIMEOUT_MS = 45000;
 
-/** Use localhost on web/simulator; set EXPO_PUBLIC_API_URL for device testing */
-function getBaseUrl() {
-  if (process.env.EXPO_PUBLIC_API_URL) {
-    return process.env.EXPO_PUBLIC_API_URL.replace(/\/$/, '');
-  }
-  if (Platform.OS === 'web') return 'http://localhost:4000/api';
-  return 'http://localhost:4000/api';
-}
+export { API_BASE_URL };
 
 export async function getToken() {
   return AsyncStorage.getItem(TOKEN_KEY);
@@ -34,7 +28,7 @@ async function request(path, options = {}) {
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    const res = await fetch(`${getBaseUrl()}${path}`, {
+    const res = await fetch(`${API_BASE_URL}${path}`, {
       ...options,
       headers,
       body: options.body ? JSON.stringify(options.body) : undefined,
@@ -51,7 +45,7 @@ async function request(path, options = {}) {
     return data;
   } catch (e) {
     if (e.name === 'AbortError') {
-      throw new Error('Server not responding. Start the API with: cd server && npm run dev');
+      throw new Error('Server not responding. Check your internet connection and try again.');
     }
     throw e;
   } finally {
@@ -60,8 +54,8 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  sendOtp: (phone) => request('/auth/send-otp', { method: 'POST', body: { phone } }),
-  verifyOtp: (phone, otp) => request('/auth/verify-otp', { method: 'POST', body: { phone, otp } }),
+  sendOtp: (email) => request('/auth/send-otp', { method: 'POST', body: { email } }),
+  verifyOtp: (email, otp) => request('/auth/verify-otp', { method: 'POST', body: { email, otp } }),
   signup: (body, signupToken) =>
     request('/auth/signup', {
       method: 'POST',
