@@ -2,42 +2,64 @@
 
 Rural community app for village residents and panchayat (Sarpanch) — announcements, directory, marketplace, grievances, groups, and more.
 
+## Project Structure
+
+This project has been separated into independent frontend and backend directories:
+- **`frontend/`**: The React Native Expo client app.
+- **`backend/`**: The Node.js Express server API.
+
 ## Stack
 
 - **Frontend:** Expo 51 / React Native (iOS, Android, Web)
 - **Backend:** Node.js, Express, MongoDB Atlas
 - **Auth:** Phone OTP (demo OTP: `1234`)
 
-## Quick start
+## Running the Project
 
-### API
+You can manage both folders from the root directory using the following scripts:
 
+### Installation
+Install dependencies for both projects:
 ```bash
-cd server
-cp .env.example .env   # add MongoDB URI + JWT_SECRET
+npm run install:all
+```
+
+### Running Backend API
+Start the backend server in development mode:
+```bash
+npm run start:backend
+```
+To seed the database:
+```bash
+npm run seed:backend
+```
+
+### Running Frontend App
+Start the Expo development server:
+```bash
+npm run start:frontend
+```
+
+---
+
+## Direct Directory Run
+
+Alternatively, you can run commands directly inside the directories:
+
+### Backend (`/backend`)
+```bash
+cd backend
 npm install
 npm run seed
 npm run dev
 ```
 
-Local API runs at `http://localhost:4000` (development only).
-
-### App (uses production API)
-
-The mobile app always calls **`https://villageconnect-782o.onrender.com/api`** (see `src/config/api.js`).
-
+### Frontend (`/frontend`)
 ```bash
+cd frontend
 npm install
-npx expo start
+npm run start
 ```
-
-### Build APK
-
-```bash
-npx eas build -p android --profile preview
-```
-
-Or local APK: `npx expo run:android` (release build uses the same production API URL).
 
 ## Demo logins (after seed)
 

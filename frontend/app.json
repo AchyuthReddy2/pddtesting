@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "VillageConnect",
+    "slug": "villageconnect",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1B5E3F"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.villageconnect.app"
+    },
+    "android": {
+      "package": "com.villageconnect.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1B5E3F"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "extra": {
+      "apiBaseUrl": "https://villageconnect-782o.onrender.com/api",
+      "eas": {
+        "projectId": "ef9905c9-e833-4841-aa57-0d2b5df61814"
+      }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow VillageConnect to attach photos to grievances."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow VillageConnect to attach your location to grievances and emergency alerts."
+        }
+      ],
+      "expo-localization",
+      "expo-font"
+    ],
+    "owner": "mohith121"
+  }
+}

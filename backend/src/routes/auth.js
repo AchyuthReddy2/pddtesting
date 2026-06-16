@@ -1,0 +1,117 @@
+const express = require('express');
+const User = require('../models/User');
+const { signToken } = require('../middleware/auth');
+const { formatUser } = require('../utils/userShape');
+const { sendOtpEmail } = require('../utils/mailer');
+const { generateOtp, saveOtp, verifyOtp } = require('../utils/otpStore');
+
+const router = express.Router();
+const STATIC_OTP = process.env.STATIC_OTP || '';
+const allowStaticOtp = process.env.ENABLE_STATIC_OTP === 'true' && !!STATIC_OTP;
+
+function normalizeEmail(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
+router.post('/send-otp', async (req, res) => {
+  const email = normalizeEmail(req.body.email);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Valid email is required' });
+  }
+  const otp = generateOtp();
+  saveOtp(email, otp);
+
+  if (allowStaticOtp) {
+    // Optional fallback in environments where SMTP is not configured yet.
+    saveOtp(email, STATIC_OTP);
+    return res.json({ ok: true, message: `OTP sent (dev OTP: ${STATIC_OTP})` });
+  }
+
+  try {
+    await sendOtpEmail(email, otp);
+  } catch (e) {
+    if (STATIC_OTP) {
+      saveOtp(email, STATIC_OTP);
+      return res.json({ ok: true, message: 'OTP sent to your email' });
+    }
+    return res.status(500).json({ error: e.message || 'Could not send OTP email' });
+  }
+  res.json({ ok: true, message: 'OTP sent to your email' });
+});
+
+router.post('/verify-otp', async (req, res) => {
+  const email = normalizeEmail(req.body.email);
+  const otp = String(req.body.otp || '').trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) return res.status(400).json({ error: 'Invalid email' });
+  if (!verifyOtp(email, otp)) return res.status(401).json({ error: 'Incorrect or expired OTP' });
+
+  const user = await User.findOne({ email });
+  if (user) {
+    const token = signToken({ userId: String(user._id), email });
+    return res.json({ token, user: formatUser(user), needsSignup: false });
+  }
+  const token = signToken({ email, pendingSignup: true }, '1h');
+  res.json({ token, needsSignup: true });
+});
+
+router.post('/signup', async (req, res) => {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token) return res.status(401).json({ error: 'Token required' });
+
+  let payload;
+  try {
+    payload = require('jsonwebtoken').verify(token, process.env.JWT_SECRET);
+  } catch {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+  if (!payload.pendingSignup || !payload.email) {
+    return res.status(400).json({ error: 'Complete OTP verification first' });
+  }
+
+  const { name, village, role, lang, phone } = req.body;
+  const phoneValue = String(phone || '').replace(/\D/g, '');
+  if (phoneValue.length < 10) {
+    return res.status(400).json({ error: 'Valid 10-digit phone required' });
+  }
+
+  const existing = await User.findOne({ email: payload.email });
+  if (existing) {
+    const t = signToken({ userId: String(existing._id), email: existing.email });
+    return res.json({ token: t, user: formatUser(existing) });
+  }
+
+  try {
+    const user = await User.create({
+      email: payload.email,
+      phone: phoneValue,
+      name: (name || 'Villager').trim(),
+      village: (village || 'Rampur').trim(),
+      role: role === 'Sarpanch' ? 'Sarpanch' : 'Resident',
+      lang: lang || 'en',
+      onboarded: false,
+    });
+    const authToken = signToken({ userId: String(user._id), email: user.email });
+    return res.status(201).json({ token: authToken, user: formatUser(user) });
+  } catch (e) {
+    if (e.code === 11000) {
+      const field = Object.keys(e.keyPattern || {})[0] || 'field';
+      return res.status(409).json({ error: `This ${field} is already registered. Try logging in instead.` });
+    }
+    throw e;
+  }
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  router.get('/test-get-otp', (req, res) => {
+    const { getOtpForTest } = require('../utils/otpStore');
+    const email = normalizeEmail(req.query.email);
+    const otp = getOtpForTest(email);
+    if (!otp) return res.status(404).json({ error: 'No OTP found for this email' });
+    res.json({ otp });
+  });
+}
+
+module.exports = router;
