@@ -37,7 +37,11 @@ npm run seed:backend
 ### Running Frontend App
 Start the Expo development server:
 ```bash
+# Start default Expo server
 npm run start:frontend
+
+# Or run frontend specifically in Web mode
+npm run web --prefix frontend
 ```
 
 ---
@@ -58,7 +62,10 @@ npm run dev
 ```bash
 cd frontend
 npm install
+# Start for mobile app / Expo Go
 npm run start
+# Or start for Web app in browser
+npm run web
 ```
 
 ## Demo logins (after seed)
