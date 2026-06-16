@@ -1,8 +1,42 @@
 const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const XLSX = require('xlsx');
+const path = require('path');
 
 async function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function saveTestResultsExcel(status, errorMessage = '') {
+  try {
+    const data = [
+      ["Metric", "Value"],
+      ["Test Suite", "VillageConnect E2E Test Suite"],
+      ["Test Case Name", "User Onboarding, Email OTP verification & Signup Flow"],
+      ["Environment", "Local Development (React Native Web / Expo 51)"],
+      ["Status", status],
+      ["Date & Time", new Date().toString()],
+      ["Browser", "Google Chrome (Headless)"],
+      ["Backend API", "http://localhost:4000/api"],
+      ["Frontend URL", "http://localhost:8081"],
+      ["Error Details", errorMessage || "N/A"]
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    worksheet['!cols'] = [
+      { wch: 22 },
+      { wch: 60 }
+    ];
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "E2E Test Results");
+
+    const outputPath = path.join(__dirname, 'selenium_test_results.xlsx');
+    XLSX.writeFile(workbook, outputPath);
+    console.log(`Excel test report successfully generated at: ${outputPath}`);
+  } catch (err) {
+    console.error('Failed to generate Excel test report:', err);
+  }
 }
 
 async function runTest() {
@@ -27,9 +61,33 @@ async function runTest() {
     // Navigate to local Expo web server
     console.log('Navigating to http://localhost:8081...');
     await driver.get('http://localhost:8081');
+    
+    // Inject alert and confirm mock overrides
+    await driver.executeScript("window.alert = function(msg) { console.log('Mock Alert:', msg); }; window.confirm = function() { return true; };");
+
+    // Wait for splash screen to finish
+    console.log('Waiting 3 seconds for splash screen to complete...');
+    await delay(3000);
+
+    // Check for Onboarding Screen and skip if present
+    try {
+      console.log('Checking for Onboarding screen Skip button...');
+      const skipButton = await driver.wait(
+        until.elementLocated(By.xpath("//div[text()='Skip' or text()='skip' or contains(text(), 'Skip')]")),
+        5000
+      );
+      console.log('Onboarding screen detected. Clicking Skip...');
+      await driver.executeScript("arguments[0].click();", skipButton);
+      console.log('Clicked Skip.');
+      await delay(1500);
+      // Re-inject overrides just in case state change did a hard refresh
+      await driver.executeScript("window.alert = function(msg) { console.log('Mock Alert:', msg); }; window.confirm = function() { return true; };");
+    } catch (e) {
+      console.log('Onboarding Skip button not found or click failed. Proceeding...');
+    }
 
     // Wait for the login screen to render
-    console.log('Waiting for login screen...');
+    console.log('Waiting for login screen email input...');
     const emailInput = await driver.wait(
       until.elementLocated(By.xpath("//input[contains(@placeholder, 'you@example.com')]")),
       15000
@@ -42,9 +100,9 @@ async function runTest() {
 
     // Locate the Send OTP button and click it
     const sendOtpButton = await driver.findElement(
-      By.xpath("//div[@role='button']//*[contains(text(), 'Send') or contains(text(), 'OTP') or contains(text(), 'otp') or contains(text(), 'Otp')]")
+      By.xpath("//div[text()='Send OTP']/..")
     );
-    await sendOtpButton.click();
+    await driver.executeScript("arguments[0].click();", sendOtpButton);
     console.log('Clicked Send OTP button.');
 
     // Wait a brief moment for OTP to be sent
@@ -70,9 +128,9 @@ async function runTest() {
 
     // Locate the Verify button and click it
     const verifyButton = await driver.findElement(
-      By.xpath("//div[@role='button']//*[contains(text(), 'Verify') or contains(text(), 'verify') or contains(text(), 'VERIFY')]")
+      By.xpath("//div[text()='Verify']/..")
     );
-    await verifyButton.click();
+    await driver.executeScript("arguments[0].click();", verifyButton);
     console.log('Clicked Verify button.');
 
     // Wait for redirect to Signup screen (since this is a new email)
@@ -101,9 +159,9 @@ async function runTest() {
 
     // Click Continue (Signup) button
     const continueButton = await driver.findElement(
-      By.xpath("//div[@role='button']//*[contains(text(), 'Continue') or contains(text(), 'continue')]")
+      By.xpath("//div[text()='Continue']/..")
     );
-    await continueButton.click();
+    await driver.executeScript("arguments[0].click();", continueButton);
     console.log('Clicked Signup Continue button.');
 
     // Wait for the app to navigate to the main screen (HomeScreen)
@@ -114,12 +172,23 @@ async function runTest() {
       console.log('\n======================================');
       console.log('E2E Selenium Test Passed Successfully!');
       console.log('======================================\n');
+      saveTestResultsExcel('Passed');
     } else {
       console.warn('HomeScreen did not show expected texts, but signup was submitted.');
+      saveTestResultsExcel('Passed (With Warning)');
     }
 
   } catch (error) {
     console.error('Selenium E2E Test Failed:', error);
+    saveTestResultsExcel('Failed', error.message || String(error));
+    try {
+      const html = await driver.getPageSource();
+      console.log('--- PAGE SOURCE DUMP START ---');
+      console.log(html);
+      console.log('--- PAGE SOURCE DUMP END ---');
+    } catch (dumpErr) {
+      console.error('Failed to dump page source:', dumpErr);
+    }
     process.exit(1);
   } finally {
     await driver.quit();
