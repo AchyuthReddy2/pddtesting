@@ -11,12 +11,15 @@
     "start:backend": "npm run dev --prefix backend",
     "seed:backend": "npm run seed --prefix backend",
     "test:selenium": "node tests/selenium.test.js",
-    "test:selenium:e2e": "node tests/selenium_e2e.test.js"
+    "test:selenium:e2e": "node tests/selenium_e2e.test.js",
+    "test:appium:e2e": "node tests/appium_e2e.test.js",
+    "test:full": "npm run test:selenium:e2e && npm run test:appium:e2e"
   },
   "devDependencies": {
     "eas-cli": "^20.1.0",
     "selenium-webdriver": "^4.20.0",
-    "chromedriver": "latest"
+    "chromedriver": "latest",
+    "appium": "^2.5.1"
   },
   "dependencies": {
     "xlsx": "^0.18.5"
