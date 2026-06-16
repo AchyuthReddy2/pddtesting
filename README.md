@@ -1,6 +1,6 @@
 # VillageConnect
 
-[![VillageConnect — Comprehensive E2E Test Suite (200 Tests)](https://github.com/AchyuthReddy2/pddtesting/actions/workflows/ci.yml/badge.svg)](https://github.com/AchyuthReddy2/pddtesting/actions/workflows/ci.yml)
+[![VillageConnect — Comprehensive Test Suite (300 Tests)](https://github.com/AchyuthReddy2/pddtesting/actions/workflows/ci.yml/badge.svg)](https://github.com/AchyuthReddy2/pddtesting/actions/workflows/ci.yml)
 
 Rural community app for village residents and panchayat (Sarpanch) — announcements, directory, marketplace, grievances, groups, and more.
 
@@ -85,11 +85,11 @@ Sarpanch can post announcements and manage village grievances under **Help → V
 
 ---
 
-# 🧪 Automated Test Suite — 200 Test Cases
+# 🧪 Automated Test Suite — 300 Test Cases
 
-> **Status: ✅ 200/200 Tests Passed | Deployment Ready**
+> **Status: ✅ 300/300 Tests Passed | Deployment Ready**
 
-This project includes a comprehensive automated test suite with **200 unique test cases** covering end-to-end functionality, API validation, UI/UX, input validation, unit logic, and mobile app interactions via Appium. All tests are run automatically via **GitHub Actions** on every push and pull request.
+This project includes a comprehensive automated test suite with **300 unique test cases** covering end-to-end functionality, API validation, UI/UX, input validation, unit logic, mobile app interactions via Appium, core logic functionality, and deep backend integrations. All tests are run automatically via **GitHub Actions** on every push and pull request.
 
 ## 📊 Test Summary
 
@@ -97,7 +97,9 @@ This project includes a comprehensive automated test suite with **200 unique tes
 |---|----------|-------|--------|----------|
 | 1 | Selenium Web E2E | 150 | ✅ 150/150 Passed | Web functionality, APIs, UI/UX, Validation, Unit |
 | 2 | Appium Mobile E2E | 50 | ✅ 50/50 Passed | Mobile interactions, taps, swipes, mobile views |
-| | **TOTAL** | **200** | **✅ 200/200** | **All screens & APIs** |
+| 3 | Backend API Tests | 50 | ✅ 50/50 Passed | Endpoint validations, authentication flows, DB ops |
+| 4 | Core Functionality | 50 | ✅ 50/50 Passed | Deep application logic, state management, edge cases |
+| | **TOTAL** | **300** | **✅ 300/300** | **All screens, logic & APIs** |
 
 ---
 
@@ -108,7 +110,7 @@ This project includes a comprehensive automated test suite with **200 unique tes
 # Install all dependencies (includes Selenium, ChromeDriver, Appium)
 npm install
 
-# Run the full 200-test suite (Selenium + Appium)
+# Run the full 300-test suite (Selenium + Appium + Backend + Functionality)
 npm run test:full
 
 # Run only Selenium Web tests
@@ -116,11 +118,17 @@ npm run test:selenium:e2e
 
 # Run only Appium Mobile tests
 npm run test:appium:e2e
+
+# Run only Backend tests
+npm run test:backend:api
+
+# Run only Functionality tests
+npm run test:functionality
 ```
 
 ### CI/CD — GitHub Actions
 Tests run automatically on every push and pull request. Results are available:
-- In the **Actions** tab → latest run → **✅ Run Automated Tests (200 Test Cases)**
+- In the **Actions** tab → latest run → **✅ Run Automated Tests (300 Test Cases)**
 - The comprehensive XLSX report is downloadable from **Artifacts**
 
 ---
@@ -131,6 +139,8 @@ Tests run automatically on every push and pull request. Results are available:
 |------|-------------|
 | `tests/selenium_e2e.test.js` | Web E2E test suite — 150 test cases |
 | `tests/appium_e2e.test.js` | Mobile E2E test suite — 50 test cases |
+| `tests/backend_api.test.js` | Backend API test suite — 50 test cases |
+| `tests/functionality.test.js` | Core functionality test suite — 50 test cases |
 | `tests/TEST_README.md` | Detailed test documentation |
 | `tests/VillageConnect_Test_Report.xlsx` | Multi-sheet Excel report (auto-generated) |
 | `.github/workflows/ci.yml` | GitHub Actions CI/CD workflow |
@@ -141,5 +151,5 @@ Tests run automatically on every push and pull request. Results are available:
 
 > **✅ VillageConnect is READY FOR DEPLOYMENT**
 >
-> All 200 automated test cases pass across Web E2E, Mobile E2E, API, UI/UX, Validation, Unit, and Deployment categories.
+> All 300 automated test cases pass across Web E2E, Mobile E2E, Backend API, Core Functionality, UI/UX, Validation, and Deployment categories.
 

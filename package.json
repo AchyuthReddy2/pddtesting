@@ -13,7 +13,9 @@
     "test:selenium": "node tests/selenium.test.js",
     "test:selenium:e2e": "node tests/selenium_e2e.test.js",
     "test:appium:e2e": "node tests/appium_e2e.test.js",
-    "test:full": "npm run test:selenium:e2e && npm run test:appium:e2e"
+    "test:backend:api": "node tests/backend_api.test.js",
+    "test:functionality": "node tests/functionality.test.js",
+    "test:full": "npm run test:selenium:e2e && npm run test:appium:e2e && npm run test:backend:api && npm run test:functionality"
   },
   "devDependencies": {
     "eas-cli": "^20.1.0",

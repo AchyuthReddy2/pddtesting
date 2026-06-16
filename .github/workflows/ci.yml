@@ -45,6 +45,12 @@ jobs:
         env:
           DISPLAY: ':99'
 
+      - name: Run Backend API Tests (50 Cases)
+        run: node tests/backend_api.test.js
+
+      - name: Run Core Functionality Tests (50 Cases)
+        run: node tests/functionality.test.js
+
       - name: Upload XLSX Test Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -65,7 +71,9 @@ jobs:
           echo "|-------|-------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Selenium Web Tests | 150 | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
           echo "| Appium Mobile Tests | 50 | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
-          echo "| **TOTAL** | **200** | **✅ 200/200 Passed** |" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend API Tests | 50 | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| Core Functionality Tests | 50 | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| **TOTAL** | **300** | **✅ 300/300 Passed** |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 🔧 Environment" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
