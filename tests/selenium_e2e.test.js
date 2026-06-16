@@ -14,6 +14,10 @@ const chrome = require('selenium-webdriver/chrome');
 const XLSX = require('xlsx');
 const path = require('path');
 
+// Register npm-managed ChromeDriver (used in CI and local environments)
+try { require('chromedriver'); } catch {}
+
+
 // ── Configuration ───────────────────────────────────────────────────────────
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8081';
 const API_BASE     = process.env.API_BASE_URL || 'https://villageconnect-782o.onrender.com/api';

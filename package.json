@@ -15,7 +15,8 @@
   },
   "devDependencies": {
     "eas-cli": "^20.1.0",
-    "selenium-webdriver": "^4.20.0"
+    "selenium-webdriver": "^4.20.0",
+    "chromedriver": "latest"
   },
   "dependencies": {
     "xlsx": "^0.18.5"
