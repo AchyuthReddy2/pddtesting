@@ -1,0 +1,72 @@
+name: VillageConnect Selenium E2E Test Suite
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  selenium-tests:
+    name: Run Selenium E2E Tests (105 Test Cases)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 'stable'
+
+      - name: Install ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: 'latest'
+
+      - name: Install root dependencies
+        run: npm install
+
+      - name: Display Chrome version
+        run: |
+          google-chrome --version || true
+          chromedriver --version || true
+
+      - name: Run Selenium E2E Test Suite
+        run: node tests/selenium_e2e.test.js
+        env:
+          API_BASE_URL: https://villageconnect-782o.onrender.com/api
+          FRONTEND_URL: http://localhost:8081
+          DISPLAY: ':99'
+
+      - name: Upload Test Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VillageConnect-Test-Report
+          path: tests/VillageConnect_Test_Report.xlsx
+          retention-days: 30
+
+      - name: Upload Test Results Summary
+        if: always()
+        run: |
+          echo "## 📊 VillageConnect Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | VillageConnect Comprehensive E2E |" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Test Cases | 105 |" >> $GITHUB_STEP_SUMMARY
+          echo "| Categories | E2E Functional, API, UI/UX, Validation, Unit, Deployment |" >> $GITHUB_STEP_SUMMARY
+          echo "| Report | Available in Artifacts |" >> $GITHUB_STEP_SUMMARY
+          echo "| Date | $(date -u) |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📋 Download the XLSX report from the **Artifacts** section above." >> $GITHUB_STEP_SUMMARY

@@ -10,7 +10,8 @@
     "start:frontend": "npm start --prefix frontend",
     "start:backend": "npm run dev --prefix backend",
     "seed:backend": "npm run seed --prefix backend",
-    "test:selenium": "node tests/selenium.test.js"
+    "test:selenium": "node tests/selenium.test.js",
+    "test:selenium:e2e": "node tests/selenium_e2e.test.js"
   },
   "devDependencies": {
     "eas-cli": "^20.1.0",
